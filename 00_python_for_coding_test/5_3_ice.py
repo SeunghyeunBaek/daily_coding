@@ -1,22 +1,50 @@
 """얼음 얼리기
-Stack, Recursive
-
+* DFS
 """
+
 from itertools import product
 
 def main(input_):
-	
+	global hole, block, visited, map_	
+
+	hole, block, visited = '0', '1', 'x'
 	n_rows, n_cols, map_ = parse_input(input_)
-	start_pos = [0, 0]
 	cnt = 0
-
 	for row_id, col_id in product(range(n_rows), range(n_cols)):
+		
+		visited_pos = []
+		is_blocked = fill_hole(row_id, col_id, visited_pos)
 
-		visited_node = fill_hole_stack([row_id, col_id], map_) # TODO
-		# visited_node = fill_hole_recursive() # TODO 
+		if not is_blocked:
+			cnt = cnt+1
+			print(f"----Count +1: {cnt}")
+			print(f"----Visited: {visited_pos}")
 
 	return cnt 
 
+def fill_hole(row_id, col_id, visited_pos):
+	global hole, block, visited, map_
+
+	# Exit condition
+	if is_outside([row_id, col_id], len(map_), len(map_[0])):
+		return True
+
+	if map_[row_id][col_id] == hole:
+		map_[row_id][col_id] = visited
+		visited_pos.append([row_id, col_id])
+
+		print(f"Visited: {row_id} {col_id}")
+		print_map(map_)
+
+		fill_hole(row_id+1, col_id, visited_pos)
+		fill_hole(row_id-1, col_id, visited_pos)
+		fill_hole(row_id, col_id+1, visited_pos)
+		fill_hole(row_id, col_id-1, visited_pos)
+		
+		return False
+
+	else:
+		return True
 
 def parse_input(input_:str)->list:
 	"""Parse input data
@@ -26,83 +54,53 @@ def parse_input(input_:str)->list:
 	map_ = []
 
 	for row_id in range(n_rows):
-		row = list(map(int, lines[1+row_id].split(' ')))
+		row = [char_ for char_ in lines[1+row_id]]
 		map_.append(row)
 
 	return n_rows, n_cols, map_
 
-def is_outside(pos, n_cols, n_rows):
+def is_outside(pos, n_rows, n_cols):
 
 	if all([0<=pos[0]<n_rows, 0<=pos[1]<n_cols]):
 		return False
 
 	else:
-		return True 
+		return True
 
-# TODO: dfs stack
-def fill_hole_stack(root_node, map_):
+def print_map(map_):
 
-	global hole, block, visited, moving_map
-
-	# Initiate stack
-	visited_nodes = [root_node]
-
-	while visited_nodes:
-		
-		print(f"visited nodes: {visited_nodes}")
-		cur_node = visited_nodes.pop()
-		node_state = map_[cur_node[0]][cur_node[1]]
-		print(f"current node: {cur_node}, {node_state}")
-		if (node_state != visited) and (node_state == hole):
-
-			map_[cur_node[0]][cur_node[1]] = visited
-
-			for direction in range(4):
-
-				dst_node = [cur_node[0] + moving_map[direction][0],
-							cur_node[1] + moving_map[direction][1]]
-
-				if (dst_node != visited) and (node_state == hole):
-					visited_nodes.append(dst_node)
-
-	return visited_nodes
-
-#TODO: dfs recursive
-def fill_hole_recursive():
-	return None
-
-
-
+	print()
+	for row in map_:
+		print(row)
+	print()
 
 if __name__ == '__main__':
 
-	global hole, block, visited, moving_map
-	hole, block, visited = '0', '1', 'x'
-	moving_map = {0: [0, -1], 1: [1, 0], 2: [0, 1],3: [-1, 0]}
-
 	inputs = [
 		"""4 5
-		0 0 1 1 0
-		0 0 0 1 1
-		1 1 1 1 1
-		0 0 0 0 0""",
+00110
+00011
+11111
+00000""",
+
 		"""15 14
-		00000111100000
-		11111101111110
-		11011101101110
-		11011101100000
-		11011111111111
-		11011111111100
-		11000000011111
-		01111111111111
-		00000000011111
-		01111111111000
-		00011111111000
-		00000001111000
-		11111111110011
-		11100011111111
-		11100011111111"""
-	]
+00000111100000
+11111101111110
+11011101101110
+11011101100000
+11011111111111
+11011111111100
+11000000011111
+01111111111111
+00000000011111
+01111111111000
+00011111111000
+00000001111000
+11111111110011
+11100011111111
+11100011111111"""]
 
 	for i, input_ in enumerate(inputs):
-		print(i, main(input_))
+		print("="*30)
+		print(f"input: {i}, ans: {main(input_)}")
+		print("="*30)
