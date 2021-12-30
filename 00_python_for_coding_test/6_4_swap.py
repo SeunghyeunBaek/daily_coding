@@ -2,10 +2,19 @@
 def main(inputs_):
     lines = inputs_.split('\n')
     n, k = list(map(int, lines[0].split(' ')))
-    a = sorted(list(map(int, lines[1].split(' '))), reverse=True)
+    a = sorted(list(map(int, lines[1].split(' '))))
     b = sorted(list(map(int, lines[2].split(' '))), reverse=True)
-    """TODO
-    """
+
+    for i in range(k):
+
+        if a[i] < b[i]:
+            a[i], b[i] = b[i], a[i]
+        else:
+            break
+            
+    return sum(a)
+
+
 
 if __name__ == '__main__': 
     inputs_ = """5 3
