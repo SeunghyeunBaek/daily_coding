@@ -26,14 +26,13 @@ def main(input_):
         current_node = get_nearest_node(start_node, n_nodes, min_distances, visited)
         visited[current_node] = True
 
-        # Update min distance
-        for distance_info in graph[current_node]:
+        # Check layovers and update min distance
+        for dst_node, distance_ in graph[current_node]:
 
-            dst_node, distance = distance_info
-            total_distance = min_distances[current_node] + distance
+            layover_distance = min_distances[current_node] + distance_
 
-            if total_distance < min_distances[dst_node]:
-                min_distances[dst_node] = total_distance
+            if layover_distance < min_distances[dst_node]:
+                min_distances[dst_node] = layover_distance
 
         log(f"[iter {i}]")
         log_current_status(graph, visited, min_distances)
