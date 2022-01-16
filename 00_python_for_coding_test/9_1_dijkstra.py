@@ -1,4 +1,4 @@
-# Gridy dijkstra
+# Greedy dijkstra
 DEBUG = True
 
 def main(input_):
@@ -78,13 +78,6 @@ def log_current_status(graph, visited, min_distances):
     log("[Current status]")
     log(f"- min distances: {min_distances}")
     log(f"- visited: {visited}")
-    # log(f"- graph")
-
-    # for node, distances_to_node in enumerate(graph):
-    #     log(f"-- {node}")
-
-    #     for dst_node, distance_ in distances_to_node:
-    #         log(f"--- {dst_node}: {distance_}")
 
 if __name__ == '__main__':
 
